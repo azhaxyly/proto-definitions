@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package inventory;
 
-// Задаём go_package, по которому будут генерироваться файлы для импорта в Go-проекты
 option go_package = "github.com/azhaxyly/proto-definitions/inventory;inventorypb";
 
 // Описание gRPC сервиса для Inventory
@@ -16,17 +15,20 @@ service InventoryService {
   // Обновить статус ресурса
   rpc UpdateResourceStatus (UpdateResourceStatusRequest) returns (UpdateResourceStatusResponse);
 
-  // (Опционально) Создать новый ресурс
+  // Создать новый ресурс
   rpc CreateResource (CreateResourceRequest) returns (CreateResourceResponse);
 
-  // (Опционально) Удалить ресурс
+  // Удалить ресурс
   rpc DeleteResource (DeleteResourceRequest) returns (DeleteResourceResponse);
+
+  // Получить детальную информацию о ресурсе
+  rpc GetResource (GetResourceRequest) returns (GetResourceResponse);
 }
 
 // --------------------- Messages ---------------------
 
 message ListResourcesRequest {
-  // При необходимости можно добавить фильтры по типу ресурса, статусу и т.д.
+  // При необходимости можно добавить фильтры по типу или статусу
 }
 
 message ListResourcesResponse {
@@ -41,7 +43,6 @@ message Resource {
   string description = 5;
 }
 
-// Проверка доступности
 message CheckAvailabilityRequest {
   string resource_id = 1;
 }
@@ -50,7 +51,6 @@ message CheckAvailabilityResponse {
   bool is_available = 1;
 }
 
-// Обновление статуса
 message UpdateResourceStatusRequest {
   string resource_id = 1;
   string new_status = 2; // "available", "booked", "unavailable"
@@ -61,7 +61,6 @@ message UpdateResourceStatusResponse {
   string status = 2;
 }
 
-// Создание ресурса (опционально)
 message CreateResourceRequest {
   string name = 1;
   string type = 2;
@@ -72,7 +71,6 @@ message CreateResourceResponse {
   Resource resource = 1;
 }
 
-// Удаление ресурса (опционально)
 message DeleteResourceRequest {
   string resource_id = 1;
 }
@@ -80,4 +78,12 @@ message DeleteResourceRequest {
 message DeleteResourceResponse {
   string resource_id = 1;
   bool deleted = 2;
+}
+
+message GetResourceRequest {
+  string resource_id = 1;
+}
+
+message GetResourceResponse {
+  Resource resource = 1;
 }

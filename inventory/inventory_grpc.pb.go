@@ -24,6 +24,7 @@ const (
 	InventoryService_UpdateResourceStatus_FullMethodName = "/inventory.InventoryService/UpdateResourceStatus"
 	InventoryService_CreateResource_FullMethodName       = "/inventory.InventoryService/CreateResource"
 	InventoryService_DeleteResource_FullMethodName       = "/inventory.InventoryService/DeleteResource"
+	InventoryService_GetResource_FullMethodName          = "/inventory.InventoryService/GetResource"
 )
 
 // InventoryServiceClient is the client API for InventoryService service.
@@ -38,10 +39,12 @@ type InventoryServiceClient interface {
 	CheckAvailability(ctx context.Context, in *CheckAvailabilityRequest, opts ...grpc.CallOption) (*CheckAvailabilityResponse, error)
 	// Обновить статус ресурса
 	UpdateResourceStatus(ctx context.Context, in *UpdateResourceStatusRequest, opts ...grpc.CallOption) (*UpdateResourceStatusResponse, error)
-	// (Опционально) Создать новый ресурс
+	// Создать новый ресурс
 	CreateResource(ctx context.Context, in *CreateResourceRequest, opts ...grpc.CallOption) (*CreateResourceResponse, error)
-	// (Опционально) Удалить ресурс
+	// Удалить ресурс
 	DeleteResource(ctx context.Context, in *DeleteResourceRequest, opts ...grpc.CallOption) (*DeleteResourceResponse, error)
+	// Получить детальную информацию о ресурсе
+	GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error)
 }
 
 type inventoryServiceClient struct {
@@ -102,6 +105,16 @@ func (c *inventoryServiceClient) DeleteResource(ctx context.Context, in *DeleteR
 	return out, nil
 }
 
+func (c *inventoryServiceClient) GetResource(ctx context.Context, in *GetResourceRequest, opts ...grpc.CallOption) (*GetResourceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetResourceResponse)
+	err := c.cc.Invoke(ctx, InventoryService_GetResource_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InventoryServiceServer is the server API for InventoryService service.
 // All implementations must embed UnimplementedInventoryServiceServer
 // for forward compatibility.
@@ -114,10 +127,12 @@ type InventoryServiceServer interface {
 	CheckAvailability(context.Context, *CheckAvailabilityRequest) (*CheckAvailabilityResponse, error)
 	// Обновить статус ресурса
 	UpdateResourceStatus(context.Context, *UpdateResourceStatusRequest) (*UpdateResourceStatusResponse, error)
-	// (Опционально) Создать новый ресурс
+	// Создать новый ресурс
 	CreateResource(context.Context, *CreateResourceRequest) (*CreateResourceResponse, error)
-	// (Опционально) Удалить ресурс
+	// Удалить ресурс
 	DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error)
+	// Получить детальную информацию о ресурсе
+	GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error)
 	mustEmbedUnimplementedInventoryServiceServer()
 }
 
@@ -142,6 +157,9 @@ func (UnimplementedInventoryServiceServer) CreateResource(context.Context, *Crea
 }
 func (UnimplementedInventoryServiceServer) DeleteResource(context.Context, *DeleteResourceRequest) (*DeleteResourceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteResource not implemented")
+}
+func (UnimplementedInventoryServiceServer) GetResource(context.Context, *GetResourceRequest) (*GetResourceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetResource not implemented")
 }
 func (UnimplementedInventoryServiceServer) mustEmbedUnimplementedInventoryServiceServer() {}
 func (UnimplementedInventoryServiceServer) testEmbeddedByValue()                          {}
@@ -254,6 +272,24 @@ func _InventoryService_DeleteResource_Handler(srv interface{}, ctx context.Conte
 	return interceptor(ctx, in, info, handler)
 }
 
+func _InventoryService_GetResource_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetResourceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InventoryServiceServer).GetResource(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: InventoryService_GetResource_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InventoryServiceServer).GetResource(ctx, req.(*GetResourceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // InventoryService_ServiceDesc is the grpc.ServiceDesc for InventoryService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -280,6 +316,10 @@ var InventoryService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteResource",
 			Handler:    _InventoryService_DeleteResource_Handler,
+		},
+		{
+			MethodName: "GetResource",
+			Handler:    _InventoryService_GetResource_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
