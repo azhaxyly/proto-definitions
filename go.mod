@@ -1,4 +1,4 @@
-module proto-definitons
+module github.com/azhaxyly/proto-definitions
 
 go 1.23.4
 
