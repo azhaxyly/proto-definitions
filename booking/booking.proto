@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package booking;
+
+option go_package = "github.com/pet-booking-system/proto-definitions/booking;bookingpb";
+
+import "google/protobuf/timestamp.proto";
+
+// gRPC Booking Service
+service BookingService {
+  rpc CreateBooking(CreateBookingRequest) returns (CreateBookingResponse);
+  rpc CancelBooking(CancelBookingRequest) returns (CancelBookingResponse);
+  rpc GetBookingStatus(GetBookingStatusRequest) returns (GetBookingStatusResponse);
+}
+
+message CreateBookingRequest {
+  string resource_id = 1;
+  google.protobuf.Timestamp start_time = 2;
+  google.protobuf.Timestamp end_time = 3;
+}
+
+message CreateBookingResponse {
+  string booking_id = 1;
+  string status = 2; // pending_payment, reserved
+}
+
+message CancelBookingRequest {
+  string booking_id = 1;
+}
+
+message CancelBookingResponse {
+  string status = 1; // canceled
+}
+
+message GetBookingStatusRequest {
+  string booking_id = 1;
+}
+
+message GetBookingStatusResponse {
+  string status = 1; // pending_payment, reserved, paid, canceled
+}

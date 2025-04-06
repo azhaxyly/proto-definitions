@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package inventory;
 
-option go_package = "github.com/azhaxyly/proto-definitions/inventory;inventorypb";
+option go_package = "github.com/pet-booking-system/proto-definitions/inventory;inventorypb";
 
 // Описание gRPC сервиса для Inventory
 service InventoryService {
