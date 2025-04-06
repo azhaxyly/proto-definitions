@@ -1,4 +1,4 @@
-module github.com/azhaxyly/proto-definitions
+module github.com/pet-booking-system/proto-definitions
 
 go 1.23.4
 
