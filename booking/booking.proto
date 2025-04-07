@@ -21,7 +21,8 @@ message CreateBookingRequest {
 
 message CreateBookingResponse {
   string booking_id = 1;
-  string status = 2; // pending_payment, reserved
+  string status = 2;
+  string payment_id = 3;
 }
 
 message CancelBookingRequest {
